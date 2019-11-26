@@ -891,9 +891,9 @@ EMPageViewControllerDelegate where T: Hashable & Comparable {
   }
   
   private func selectViewController(_ pagingItem: T, direction: PagingDirection, animated: Bool = true) {
-    guard let dataSource = infiniteDataSource,
-        let vc = dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem) else { return }
-    pageViewController.selectViewController(vc,
+    guard let dataSource = infiniteDataSource else { return }
+    pageViewController.selectViewController(
+      dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem),
       direction: direction.pageViewControllerNavigationDirection,
       animated: animated,
       completion: nil)

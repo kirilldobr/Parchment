@@ -159,39 +159,13 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     /// The view controller before the selected view controller.
-    private var _beforeViewController: UIViewController?
-    private var beforeViewController: UIViewController? {
-        get {
-            if delegate?.em_pageViewController(self, canScrollTo: _beforeViewController) ?? false {
-                return _beforeViewController
-            } else {
-                return nil
-            }
-        }
-        set {
-            _beforeViewController = newValue
-        }
-    }
-    
+    var beforeViewController: UIViewController?
     
     /// The currently selected view controller. Can be `nil` if no view controller is selected.
     open private(set) var selectedViewController: UIViewController?
     
     /// The view controller after the selected view controller.
-    
-    private var _afterViewController: UIViewController?
-    private var afterViewController: UIViewController? {
-        get {
-            if delegate?.em_pageViewController(self, canScrollTo: _afterViewController) ?? true {
-                return _afterViewController
-            } else {
-                return nil
-            }
-        }
-        set {
-            _afterViewController = newValue
-        }
-    }
+    var afterViewController: UIViewController?
     
     /// Boolean that indicates whether the page controller is currently in the process of scrolling.
     open private(set) var scrolling = false

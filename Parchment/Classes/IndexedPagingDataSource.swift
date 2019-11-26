@@ -13,14 +13,12 @@ PagingViewControllerInfiniteDataSource where T: Hashable & Comparable {
   
   func pagingViewController<U>(
     _ pagingViewController: PagingViewController<U>,
-    viewControllerForPagingItem item: U) -> UIViewController? {
+    viewControllerForPagingItem item: U) -> UIViewController {
     guard let index = items.firstIndex(of: item as! T) else {
-        return nil
-//      fatalError("pagingViewController:viewControllerForPagingItem: PagingItem does not exist")
+      fatalError("pagingViewController:viewControllerForPagingItem: PagingItem does not exist")
     }
     guard let viewController = viewControllerForIndex?(index) else {
-        return nil
-//       fatalError("pagingViewController:viewControllerForPagingItem: No view controller exist for PagingItem")
+       fatalError("pagingViewController:viewControllerForPagingItem: No view controller exist for PagingItem")
     }
     
     return viewController
