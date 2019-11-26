@@ -516,11 +516,11 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         var beforeInset:CGFloat = 0
         var afterInset:CGFloat = 0
         
-        if (self.beforeViewController == nil) {
+        if self.beforeViewController == nil || !(delegate?.em_pageViewController(self, canScrollTo: self.beforeViewController) ?? false) {
             beforeInset = self.isOrientationHorizontal ? -viewWidth : -viewHeight
         }
         
-        if (self.afterViewController == nil) {
+        if self.afterViewController == nil || !(delegate?.em_pageViewController(self, canScrollTo: self.afterViewController) ?? false) {
             afterInset = self.isOrientationHorizontal ? -viewWidth : -viewHeight
         }
         
