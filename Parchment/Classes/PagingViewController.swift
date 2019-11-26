@@ -18,7 +18,13 @@ open class PagingViewController<T: PagingItem>:
   UICollectionViewDataSource,
   UICollectionViewDelegate,
   EMPageViewControllerDataSource,
-  EMPageViewControllerDelegate where T: Hashable & Comparable {
+EMPageViewControllerDelegate where T: Hashable & Comparable {
+    
+    
+    public func em_pageViewController(_ pageViewController: EMPageViewController, canScrollTo viewController: UIViewController?) -> Bool {
+        return infiniteDataSource?.pagingViewController(self, canOpenViewController: viewController) ?? false
+    }
+    
 
   // MARK: Public Properties
   
@@ -443,6 +449,10 @@ open class PagingViewController<T: PagingItem>:
     let pagingItem = dataSource.pagingViewController(self, pagingItemForIndex: index)
     select(pagingItem: pagingItem, animated: animated)
   }
+    
+   open func layoutViews() {
+        pageViewController.layoutViews()
+    }
 
   open override func loadView() {
     view = PagingView(
@@ -881,9 +891,9 @@ open class PagingViewController<T: PagingItem>:
   }
   
   private func selectViewController(_ pagingItem: T, direction: PagingDirection, animated: Bool = true) {
-    guard let dataSource = infiniteDataSource else { return }
-    pageViewController.selectViewController(
-      dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem),
+    guard let dataSource = infiniteDataSource,
+        let vc = dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem) else { return }
+    pageViewController.selectViewController(vc,
       direction: direction.pageViewControllerNavigationDirection,
       animated: animated,
       completion: nil)

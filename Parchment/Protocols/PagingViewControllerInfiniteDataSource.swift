@@ -19,7 +19,7 @@ public protocol PagingViewControllerInfiniteDataSource: class {
   /// - Returns: The view controller for the `PagingItem` instance
   func pagingViewController<T>(
     _ pagingViewController: PagingViewController<T>,
-    viewControllerForPagingItem: T) -> UIViewController
+    viewControllerForPagingItem: T) -> UIViewController?
 
   /// The `PagingItem` that comes before a given `PagingItem`
   ///
@@ -44,4 +44,10 @@ public protocol PagingViewControllerInfiniteDataSource: class {
   func pagingViewController<T>(
     _ pagingViewController: PagingViewController<T>,
     pagingItemAfterPagingItem: T) -> T?
+    
+    func pagingViewController<T>(
+        _ pagingViewController: PagingViewController<T>,
+        canOpenViewController: UIViewController?) -> Bool
+    
+
 }

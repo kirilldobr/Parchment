@@ -97,6 +97,9 @@ import UIKit
      - parameter transitionSuccessful: A Boolean whether the transition to the destination view controller was successful or not. If `true`, the new selected view controller is `destinationViewController`. If `false`, the transition returned to the view controller it started from, so the selected view controller is still `startingViewController`.
      */
     @objc optional func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController:UIViewController, transitionSuccessful: Bool)
+    
+    @objc func em_pageViewController(_ pageViewController: EMPageViewController, canScrollTo viewController: UIViewController?) -> Bool
+    
 }
 
 /**
@@ -156,13 +159,39 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     /// The view controller before the selected view controller.
-    var beforeViewController: UIViewController?
+    private var _beforeViewController: UIViewController?
+    private var beforeViewController: UIViewController? {
+        get {
+            if delegate?.em_pageViewController(self, canScrollTo: _beforeViewController) ?? false {
+                return _beforeViewController
+            } else {
+                return nil
+            }
+        }
+        set {
+            _beforeViewController = newValue
+        }
+    }
+    
     
     /// The currently selected view controller. Can be `nil` if no view controller is selected.
     open private(set) var selectedViewController: UIViewController?
     
     /// The view controller after the selected view controller.
-    var afterViewController: UIViewController?
+    
+    private var _afterViewController: UIViewController?
+    private var afterViewController: UIViewController? {
+        get {
+            if delegate?.em_pageViewController(self, canScrollTo: _afterViewController) ?? true {
+                return _afterViewController
+            } else {
+                return nil
+            }
+        }
+        set {
+            _afterViewController = newValue
+        }
+    }
     
     /// Boolean that indicates whether the page controller is currently in the process of scrolling.
     open private(set) var scrolling = false
@@ -505,7 +534,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         #endif
     }
     
-    private func layoutViews() {
+    func layoutViews() {
         
         let viewWidth = self.view.bounds.width
         let viewHeight = self.view.bounds.height

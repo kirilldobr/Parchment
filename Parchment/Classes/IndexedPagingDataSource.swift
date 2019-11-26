@@ -2,19 +2,25 @@ import Foundation
 import UIKit
 
 class IndexedPagingDataSource<T: PagingItem>:
-  PagingViewControllerInfiniteDataSource where T: Hashable & Comparable {
+PagingViewControllerInfiniteDataSource where T: Hashable & Comparable {
+    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, canOpenViewController: UIViewController?) -> Bool where T : PagingItem, T : Comparable, T : Hashable {
+        return true
+    }
+    
   
   var items: [T] = []
   var viewControllerForIndex: ((Int) -> UIViewController?)?
   
   func pagingViewController<U>(
     _ pagingViewController: PagingViewController<U>,
-    viewControllerForPagingItem item: U) -> UIViewController {
+    viewControllerForPagingItem item: U) -> UIViewController? {
     guard let index = items.firstIndex(of: item as! T) else {
-      fatalError("pagingViewController:viewControllerForPagingItem: PagingItem does not exist")
+        return nil
+//      fatalError("pagingViewController:viewControllerForPagingItem: PagingItem does not exist")
     }
     guard let viewController = viewControllerForIndex?(index) else {
-       fatalError("pagingViewController:viewControllerForPagingItem: No view controller exist for PagingItem")
+        return nil
+//       fatalError("pagingViewController:viewControllerForPagingItem: No view controller exist for PagingItem")
     }
     
     return viewController
