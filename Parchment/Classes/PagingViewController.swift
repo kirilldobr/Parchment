@@ -450,10 +450,14 @@ EMPageViewControllerDelegate where T: Hashable & Comparable {
     select(pagingItem: pagingItem, animated: animated)
   }
     
-   open func layoutViews() {
-        pageViewController.layoutViews()
+    /**
+     Call this method when availability of neighbours has changed, but selectedViewController is still available.
+     This doesn't call .beginAppearace or .endAppearance on selectedViewController.
+     */
+    open func updateNeighboursWhenAvailabilityChanged() {
+       pageViewController.updateNeighboursWhenAvailabilityChanged()
     }
-
+    
   open override func loadView() {
     view = PagingView(
       options: options,

@@ -230,6 +230,15 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /**
+     Call this method when availability of neighbours has changed, but selectedViewController is still available.
+     This doesn't call .beginAppearace or .endAppearance on selectedViewController.
+     */
+    open func updateNeighboursWhenAvailabilityChanged() {
+        guard let selectedViewController = selectedViewController else { return }
+        didFinishScrolling(to: selectedViewController, shouldInvokeAppearanceTransitionForSelectedVC: false)
+    }
+    
+    /**
      Transitions to the view controller right of the currently selected view controller in a horizontal orientation, or below the currently selected view controller in a vertical orientation. Also described as going to the next page.
      
      - parameter animated: A Boolean whether or not to animate the transition
@@ -357,7 +366,8 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - View Controller Management
     
-    private func loadViewControllers(_ selectedViewController: UIViewController) {
+    private func loadViewControllers(_ selectedViewController: UIViewController,
+                                     shouldInvokeAppearanceTransitionForSelectedVC: Bool) {
         
         // Scrolled forward
         if (selectedViewController == self.afterViewController) {
@@ -419,7 +429,9 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             // Scrolled but ended up where started
         } else if (selectedViewController == self.selectedViewController) {
             
-            self.selectedViewController!.beginAppearanceTransition(true, animated: self.transitionAnimated)
+            if shouldInvokeAppearanceTransitionForSelectedVC {
+                self.selectedViewController!.beginAppearanceTransition(true, animated: self.transitionAnimated)
+            }
             
             if (self.navigationDirection == .forward) {
                 self.afterViewController!.beginAppearanceTransition(false, animated: self.transitionAnimated)
@@ -427,7 +439,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
                 self.beforeViewController!.beginAppearanceTransition(false, animated: self.transitionAnimated)
             }
           
-            if didViewAppear {
+            if didViewAppear && shouldInvokeAppearanceTransitionForSelectedVC {
                 self.selectedViewController?.endAppearanceTransition()
             }
             
@@ -508,7 +520,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         #endif
     }
     
-    func layoutViews() {
+    private func layoutViews() {
         
         let viewWidth = self.view.bounds.width
         let viewHeight = self.view.bounds.height
@@ -558,8 +570,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         self.addChildIfNeeded(destinationViewController)
     }
     
-    private func didFinishScrolling(to viewController: UIViewController) {
-        self.loadViewControllers(viewController)
+    private func didFinishScrolling(to viewController: UIViewController,
+                                    shouldInvokeAppearanceTransitionForSelectedVC: Bool = true) {
+        self.loadViewControllers(viewController,
+                                 shouldInvokeAppearanceTransitionForSelectedVC: shouldInvokeAppearanceTransitionForSelectedVC)
         self.layoutViews()
     }
     
