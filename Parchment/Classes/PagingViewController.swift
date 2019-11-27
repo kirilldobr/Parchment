@@ -22,7 +22,7 @@ EMPageViewControllerDelegate where T: Hashable & Comparable {
     
     
     public func em_pageViewController(_ pageViewController: EMPageViewController, canScrollTo viewController: UIViewController?) -> Bool {
-        return infiniteDataSource?.pagingViewController(self, canOpenViewController: viewController) ?? false
+        return infiniteDataSource?.pagingViewController(self, canOpenViewController: viewController) ?? true
     }
     
 
